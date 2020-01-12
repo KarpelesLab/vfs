@@ -35,6 +35,15 @@ func (l *LocalFS) Open(name string) (File, error) {
 	return (*LocalFile)(f), nil
 }
 
+func (l *LocalFS) OpenFile(name string, flag int, perm os.FileMode) (File, error) {
+	f, err := os.OpenFile(l.doPath(name), flag, perm)
+	if err != nil {
+		return nil, err
+	}
+
+	return (*LocalFile)(f), nil
+}
+
 func (l *LocalFS) Chroot(name string) (FileSystem, error) {
 	p := l.doPath(name)
 
@@ -66,6 +75,10 @@ func (f *LocalFile) Close() error {
 
 func (f *LocalFile) Read(p []byte) (int, error) {
 	return (*os.File)(f).Read(p)
+}
+
+func (f *LocalFile) Write(p []byte) (int, error) {
+	return (*os.File)(f).Write(p)
 }
 
 func (f *LocalFile) Readdir(n int) ([]os.FileInfo, error) {
