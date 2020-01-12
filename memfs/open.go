@@ -4,6 +4,8 @@ import (
 	"errors"
 	"io"
 	"os"
+
+	"github.com/KarpelesLab/vfs"
 )
 
 type memOpen struct {
@@ -25,6 +27,10 @@ func (m *memOpen) Read(b []byte) (int, error) {
 	return n, err
 }
 
+func (m *memOpen) ReadAt(b []byte, offset int64) (int, error) {
+	return m.node.ReadAt(b, offset)
+}
+
 func (m *memOpen) Readdir(n int) ([]os.FileInfo, error) {
 	return nil, errors.New("TODO")
 }
@@ -38,7 +44,7 @@ func (m *memOpen) Seek(offset int64, whence int) (int64, error) {
 }
 
 func (m *memOpen) Stat() (os.FileInfo, error) {
-	return nil, errors.New("TODO")
+	return vfs.NewStat(m.name, m.node.Size(), m.node.Mode(), m.node.ModTime(), m.node), nil
 }
 
 func (m *memOpen) Write(b []byte) (int, error) {

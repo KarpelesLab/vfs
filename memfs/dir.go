@@ -201,3 +201,19 @@ func (m *memDir) Remove(name string) error {
 func (m *memDir) ReadAt(b []byte, off int64) (int, error) {
 	return 0, vfs.ErrIsDirectory
 }
+
+func (m *memDir) Size() int64 {
+	m.lk.RLock()
+	sz := len(m.children)
+	m.lk.RUnlock()
+
+	return int64(sz)
+}
+
+func (m *memDir) Mode() os.FileMode {
+	return m.mode
+}
+
+func (m *memDir) ModTime() time.Time {
+	return m.modTime
+}
