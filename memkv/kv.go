@@ -53,15 +53,30 @@ func (e *memKv) Delete(key string) error {
 }
 
 func (e memKv) List(prefix string, callback func(key string, value vfs.KVEntry) (bool, error)) error {
-	for k, v := range e.data {
-		if prefix == "" || strings.HasPrefix(k, prefix) {
-			cont, err := callback(k, v)
-			if err != nil {
-				return err
+	cop := make(map[string]entry)
+
+	// make a copy so callback can use functions that use a lock
+	e.lk.RLock()
+	if prefix == "" {
+		for k, v := range e.data {
+			cop[k] = v
+		}
+	} else {
+		for k, v := range e.data {
+			if strings.HasPrefix(k, prefix) {
+				cop[k] = v
 			}
-			if !cont {
-				return nil
-			}
+		}
+	}
+	e.lk.RUnlock()
+
+	for k, v := range cop {
+		cont, err := callback(k, v)
+		if err != nil {
+			return err
+		}
+		if !cont {
+			return nil
 		}
 	}
 	return nil
