@@ -82,18 +82,9 @@ func (d *boltKv) List(prefix string, callback func(key string, value vfs.KVEntry
 		}
 
 		c := b.Cursor()
-		k, _ := c.Seek(pfx)
-		if k == nil {
-			return nil
-		}
 
-		for bytes.HasPrefix(k, pfx) {
+		for k, _ := c.Seek(pfx); k != nil && bytes.HasPrefix(k, pfx); k, _ = c.Next() {
 			list = append(list, string(k))
-
-			k, _ = c.Next()
-			if k == nil {
-				break
-			}
 		}
 		return nil
 	})
