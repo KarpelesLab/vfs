@@ -23,11 +23,12 @@ This implementation focuses on the following goals:
 
 # Features
 
-* Backends:
+* Filesystem Backends:
   * local filesystem
   * memory
-  * memory keyval
   * zip (read only)
+* Keyval Backends:
+  * memory
 * Frontends:
   * net/http.FileSystem
 

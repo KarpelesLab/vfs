@@ -9,9 +9,9 @@ import (
 func New(z *zip.Reader, idx Index) (vfs.FileSystem, error) {
 	switch idx {
 	case IndexMap:
-		return newZipMap(z)
+		return newZipMap(z, false)
 	case IndexFull:
-		return newZipFull(z)
+		return newZipMap(z, true)
 	default:
 		return newZip(z)
 	}

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/KarpelesLab/vfs"
+	"github.com/KarpelesLab/vfs/vdirfs"
 )
 
 type mappedZip struct {
@@ -14,14 +15,30 @@ type mappedZip struct {
 	i map[string]*zip.File
 }
 
-func newZipMap(z *zip.Reader) (vfs.FileSystem, error) {
+func newZipMap(z *zip.Reader, middleware bool) (vfs.FileSystem, error) {
 	m := &mappedZip{
 		z: z,
 		i: make(map[string]*zip.File),
 	}
 
 	for _, f := range z.File {
+		if strings.HasSuffix(f.Name, "/") {
+			continue
+		}
 		m.i[f.Name] = f
+	}
+
+	if middleware {
+		res, err := vdirfs.New(m)
+		if err != nil {
+			return nil, err
+		}
+
+		for f, _ := range m.i {
+			res.AddPath(f)
+		}
+
+		return res, nil
 	}
 
 	return m, nil
