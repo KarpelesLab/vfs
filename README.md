@@ -18,8 +18,8 @@ This implementation focuses on the following goals:
 # Features
 
 * Backends:
- * local filesystem
- * memory
+  * local filesystem
+  * memory
 
 ## Planned
 
