@@ -10,7 +10,7 @@ type localFS struct {
 	root string
 }
 
-type LocalFile os.File
+type localFile os.File
 
 // NewLocal creates a new local filesystem with root as root point. Note that
 // the root argument format depends on filesystem.
@@ -51,7 +51,7 @@ func (l *localFS) Open(name string) (File, error) {
 		return nil, err
 	}
 
-	return (*LocalFile)(f), nil
+	return (*localFile)(f), nil
 }
 
 func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (File, error) {
@@ -60,7 +60,7 @@ func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (File, error
 		return nil, err
 	}
 
-	return (*LocalFile)(f), nil
+	return (*localFile)(f), nil
 }
 
 func (l *localFS) Lstat(name string) (os.FileInfo, error) {
@@ -84,26 +84,26 @@ func (l *localFS) Chroot(name string) (FileSystem, error) {
 	return NewLocal(p)
 }
 
-func (f *LocalFile) Close() error {
+func (f *localFile) Close() error {
 	return (*os.File)(f).Close()
 }
 
-func (f *LocalFile) Read(p []byte) (int, error) {
+func (f *localFile) Read(p []byte) (int, error) {
 	return (*os.File)(f).Read(p)
 }
 
-func (f *LocalFile) Write(p []byte) (int, error) {
+func (f *localFile) Write(p []byte) (int, error) {
 	return (*os.File)(f).Write(p)
 }
 
-func (f *LocalFile) Readdir(n int) ([]os.FileInfo, error) {
+func (f *localFile) Readdir(n int) ([]os.FileInfo, error) {
 	return (*os.File)(f).Readdir(n)
 }
 
-func (f *LocalFile) Seek(offset int64, whence int) (int64, error) {
+func (f *localFile) Seek(offset int64, whence int) (int64, error) {
 	return (*os.File)(f).Seek(offset, whence)
 }
 
-func (f *LocalFile) Stat() (os.FileInfo, error) {
+func (f *localFile) Stat() (os.FileInfo, error) {
 	return (*os.File)(f).Stat()
 }
