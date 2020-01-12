@@ -24,13 +24,15 @@ This implementation focuses on the following goals:
 # Features
 
 * Filesystem Backends:
-  * local filesystem
-  * memory
-  * zip (read only)
+  * localfs filesystem
+  * memfs
+  * zipfs (read only)
 * Keyval Backends:
-  * memory
+  * memkv
 * Frontends:
   * net/http.FileSystem
+* Middleware:
+  * vdirfs: provides directory indexation/listing for backends which do not have this feature (such as zipfs)
 
 ## Planned
 
