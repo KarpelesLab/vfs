@@ -13,4 +13,4 @@ deps:
 	$(GO) get -v -t .
 
 test:
-	$(GO) test -v
+	$(GO) test -v ./...
