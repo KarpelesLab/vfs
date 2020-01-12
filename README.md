@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/KarpelesLab/vfs.svg)](https://travis-ci.org/KarpelesLab/vfs)
 [![GoDoc](https://godoc.org/github.com/KarpelesLab/vfs?status.svg)](https://godoc.org/github.com/KarpelesLab/vfs)
+[![Coverage Status](https://coveralls.io/repos/github/KarpelesLab/vfs/badge.svg?branch=master)](https://coveralls.io/github/KarpelesLab/vfs?branch=master)
 
 # Filesystem Abstraction in Go
 
