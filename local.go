@@ -92,6 +92,10 @@ func (f *localFile) Read(p []byte) (int, error) {
 	return (*os.File)(f).Read(p)
 }
 
+func (f *localFile) ReadAt(p []byte, offset int64) (int, error) {
+	return (*os.File)(f).ReadAt(p, offset)
+}
+
 func (f *localFile) Write(p []byte) (int, error) {
 	return (*os.File)(f).Write(p)
 }

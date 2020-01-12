@@ -29,6 +29,7 @@ type FileSystem interface {
 type File interface {
 	io.Closer
 	io.Reader
+	io.ReaderAt
 	io.Writer
 	io.Seeker
 	Readdir(count int) ([]os.FileInfo, error)
