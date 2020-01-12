@@ -1,12 +1,16 @@
-package vfs
+package httpfs
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/KarpelesLab/vfs"
+)
 
 type httpFsHandler struct {
-	FileSystem
+	vfs.FileSystem
 }
 
-func MakeHttpFileSystem(fs FileSystem) http.FileSystem {
+func MakeHttpFileSystem(fs vfs.FileSystem) http.FileSystem {
 	return &httpFsHandler{fs}
 }
 
