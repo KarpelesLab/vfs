@@ -20,6 +20,8 @@ This implementation focuses on the following goals:
 * Backends:
   * local filesystem
   * memory
+* Frontends:
+  * net/http.FileSystem
 
 ## Planned
 
