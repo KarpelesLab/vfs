@@ -29,6 +29,7 @@ This implementation focuses on the following goals:
   * zipfs (read only)
 * Keyval Backends:
   * memkv
+  * boltkv using [boltdb](https://github.com/boltdb/bolt)
 * Frontends:
   * net/http.FileSystem
 * Middleware:
