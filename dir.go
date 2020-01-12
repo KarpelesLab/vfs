@@ -15,7 +15,7 @@ func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
 	cur := ""
 	path = path[1:]
 
-	for {
+	for path != "" {
 		cur = cur + "/"
 		pos := strings.IndexByte(path, '/')
 		if pos == 0 {
@@ -25,17 +25,22 @@ func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
 		if pos > 0 {
 			cur = cur + path[:pos]
 			path = path[pos+1:]
+		} else {
+			cur = cur + path
+			path = ""
 		}
 
-		st, err := fs.Lstat(path)
+		st, err := fs.Lstat(cur)
 		if err == nil {
 			if !st.IsDir() {
-				return fmt.Errorf("%s exists and is %w", path, ErrNotDirectory)
+				return fmt.Errorf("%s exists and is %w", cur, ErrNotDirectory)
 			}
 		} else {
-			if err = fs.Mkdir(path, perm); err != nil {
-				return fmt.Errorf("failed to mkdir %s: %w", path, err)
+			if err = fs.Mkdir(cur, perm); err != nil {
+				return fmt.Errorf("failed to mkdir %s: %w", cur, err)
 			}
 		}
 	}
+
+	return nil
 }

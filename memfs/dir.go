@@ -17,7 +17,7 @@ type memDir struct {
 	lk       sync.RWMutex
 }
 
-func New() (vfs.FileSystem, error) {
+func New() vfs.FileSystem {
 	// make a root
 	root := &memDir{
 		children: make(map[string]node),
@@ -25,11 +25,15 @@ func New() (vfs.FileSystem, error) {
 		modTime:  time.Now(),
 	}
 
-	return root, nil
+	return root
 }
 
 func (m *memDir) access(name string) (node, error) {
 	name = path.Clean(name)
+	if name == "/" || name == "." {
+		return m, nil
+	}
+
 	for len(name) > 0 && name[0] == '/' {
 		name = name[1:]
 	}
