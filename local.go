@@ -14,8 +14,27 @@ type LocalFile os.File
 
 // NewLocal creates a new local filesystem with root as root point. Note that
 // the root argument format depends on filesystem.
-func NewLocal(root string) (FileSystem, error) {
-	return &localFS{root}, nil
+func NewLocal(p string) (FileSystem, error) {
+	p, err := filepath.Abs(p)
+	if err != nil {
+		return nil, err
+	}
+
+	p, err = filepath.EvalSymlinks(p)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if p is an existing directory
+	st, err := os.Stat(p)
+	if err != nil {
+		return nil, err
+	}
+	if !st.IsDir() {
+		return nil, ErrNotDirectory
+	}
+
+	return &localFS{p}, nil
 }
 
 func (l *localFS) doPath(p string) string {
@@ -62,27 +81,7 @@ func (l *localFS) Remove(name string) error {
 
 func (l *localFS) Chroot(name string) (FileSystem, error) {
 	p := l.doPath(name)
-
-	p, err := filepath.Abs(p)
-	if err != nil {
-		return nil, err
-	}
-
-	p, err = filepath.EvalSymlinks(p)
-	if err != nil {
-		return nil, err
-	}
-
-	// Check if p is an existing directory
-	st, err := os.Stat(p)
-	if err != nil {
-		return nil, err
-	}
-	if !st.IsDir() {
-		return nil, ErrNotDirectory
-	}
-
-	return &localFS{p}, nil
+	return NewLocal(p)
 }
 
 func (f *LocalFile) Close() error {
