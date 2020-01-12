@@ -217,3 +217,17 @@ func (m *memDir) Mode() os.FileMode {
 func (m *memDir) ModTime() time.Time {
 	return m.modTime
 }
+
+func (m *memDir) Readdir() ([]os.FileInfo, error) {
+	// we always return all entries, ignoring n
+	var res []os.FileInfo
+
+	m.lk.RLock()
+	for name, info := range m.children {
+		info := vfs.NewStat(name, info.Size(), info.Mode(), info.ModTime(), info)
+		res = append(res, info)
+	}
+	m.lk.RUnlock()
+
+	return res, nil
+}

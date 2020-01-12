@@ -32,7 +32,12 @@ func (m *memOpen) ReadAt(b []byte, offset int64) (int, error) {
 }
 
 func (m *memOpen) Readdir(n int) ([]os.FileInfo, error) {
-	return nil, errors.New("TODO")
+	dir, ok := m.node.(*memDir)
+	if !ok {
+		return nil, vfs.ErrNotDirectory
+	}
+
+	return dir.Readdir()
 }
 
 func (m *memOpen) Seek(offset int64, whence int) (int64, error) {
