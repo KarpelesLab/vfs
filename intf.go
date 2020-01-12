@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-type Filesystem interface {
+type FileSystem interface {
 	Open(name string) (File, error)
 }
 

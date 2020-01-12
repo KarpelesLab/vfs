@@ -13,7 +13,7 @@ type LocalFile os.File
 
 // NewLocal creates a new local filesystem with root as root point. Note that
 // the root argument format depends on filesystem.
-func NewLocal(root string) (Filesystem, error) {
+func NewLocal(root string) (FileSystem, error) {
 	return &LocalFS{root}, nil
 }
 
