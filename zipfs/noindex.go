@@ -50,7 +50,7 @@ func (z *noIndexZip) Lstat(name string) (os.FileInfo, error) {
 	}
 
 	// NewStat(name string, size int64, mode os.FileMode, modTime time.Time, sys interface{})
-	st := vfs.NewStat(path.Base(f.Name), int64(f.UncompressedSize), 0755, f.Modified, f)
+	st := vfs.NewStat(path.Base(f.Name), int64(f.UncompressedSize64), 0755, f.Modified, f)
 
 	return st, nil
 }
