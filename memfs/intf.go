@@ -1,12 +1,14 @@
 package memfs
 
 import (
+	"io"
 	"os"
 	"time"
 )
 
 type node interface {
-	ReadAt(b []byte, off int64) (n int, err error)
+	io.ReaderAt
+	io.WriterAt
 	Size() int64
 	Mode() os.FileMode
 	ModTime() time.Time

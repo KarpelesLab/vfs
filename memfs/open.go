@@ -1,7 +1,6 @@
 package memfs
 
 import (
-	"errors"
 	"io"
 	"os"
 
@@ -31,6 +30,18 @@ func (m *memOpen) ReadAt(b []byte, offset int64) (int, error) {
 	return m.node.ReadAt(b, offset)
 }
 
+func (m *memOpen) Write(b []byte) (int, error) {
+	n, err := m.node.WriteAt(b, m.offset)
+	if n > 0 {
+		m.offset += int64(n)
+	}
+	return n, err
+}
+
+func (m *memOpen) WriteAt(b []byte, offset int64) (int, error) {
+	return m.node.WriteAt(b, offset)
+}
+
 func (m *memOpen) Readdir(n int) ([]os.FileInfo, error) {
 	dir, ok := m.node.(*memDir)
 	if !ok {
@@ -58,8 +69,4 @@ func (m *memOpen) Seek(offset int64, whence int) (int64, error) {
 
 func (m *memOpen) Stat() (os.FileInfo, error) {
 	return vfs.NewStat(m.name, m.node.Size(), m.node.Mode(), m.node.ModTime(), m.node), nil
-}
-
-func (m *memOpen) Write(b []byte) (int, error) {
-	return 0, errors.New("TODO")
 }

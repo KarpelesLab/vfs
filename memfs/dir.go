@@ -202,6 +202,10 @@ func (m *memDir) ReadAt(b []byte, off int64) (int, error) {
 	return 0, vfs.ErrIsDirectory
 }
 
+func (m *memDir) WriteAt(b []byte, off int64) (int, error) {
+	return 0, vfs.ErrIsDirectory
+}
+
 func (m *memDir) Size() int64 {
 	m.lk.RLock()
 	sz := len(m.children)
