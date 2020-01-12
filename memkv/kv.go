@@ -2,6 +2,7 @@ package memkv
 
 import (
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/KarpelesLab/vfs"
@@ -48,6 +49,21 @@ func (e *memKv) Delete(key string) error {
 	e.lk.Lock()
 	delete(e.data, key)
 	e.lk.Unlock()
+	return nil
+}
+
+func (e memKv) List(prefix string, callback func(key string, value vfs.KVEntry) (bool, error)) error {
+	for k, v := range e.data {
+		if prefix == "" || strings.HasPrefix(k, prefix) {
+			cont, err := callback(k, v)
+			if err != nil {
+				return err
+			}
+			if !cont {
+				return nil
+			}
+		}
+	}
 	return nil
 }
 

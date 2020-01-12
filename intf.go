@@ -41,6 +41,12 @@ type Keyval interface {
 	Get(key string) (KVEntry, error)
 	Put(key string, value KVEntry) error
 	Delete(key string) error
+
+	// List will call callback for each entry stored in the keyval which prefix
+	// matches. If the callback returns cont=false or err != nil, the function
+	// will stop.
+	// There is no guarantee entries will be listed in any order.
+	List(prefix string, callback func(key string, value KVEntry) (cont bool, err error)) error
 }
 
 type KVEntry interface {
