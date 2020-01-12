@@ -44,6 +44,22 @@ func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (File, error
 	return (*LocalFile)(f), nil
 }
 
+func (l *localFS) Lstat(name string) (os.FileInfo, error) {
+	return os.Lstat(l.doPath(name))
+}
+
+func (l *localFS) Stat(name string) (os.FileInfo, error) {
+	return os.Stat(l.doPath(name))
+}
+
+func (l *localFS) Mkdir(name string, perm os.FileMode) error {
+	return os.Mkdir(l.doPath(name), perm)
+}
+
+func (l *localFS) Remove(name string) error {
+	return os.Remove(l.doPath(name))
+}
+
 func (l *localFS) Chroot(name string) (FileSystem, error) {
 	p := l.doPath(name)
 
