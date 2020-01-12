@@ -7,6 +7,11 @@
 Yet another one, created because none of the bazillon existing VFS matched
 the needs we have.
 
+Cloud storage solutions such as AWS S3 are considered "keyvals", similar to
+databases where changing a byte in a value requires rewriting the whole value.
+The goal is to be able to offer middleware interfaces that expose such
+backends as proper filesystems supporting partial writes.
+
 # Focus
 
 This implementation focuses on the following goals:
@@ -22,10 +27,12 @@ This implementation focuses on the following goals:
   * local filesystem
   * memory
   * memory keyval
+  * zip (read only)
 * Frontends:
   * net/http.FileSystem
 
 ## Planned
 
-* Support for a wide range of backends (AWS S3, zip file, etc)
+* Support for a wide range of backends (AWS S3, etc)
 * Support for frontends (fuse, http, etc)
+* Middlewares (keyval→filesystem adapters, encryption, etc)

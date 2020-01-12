@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/KarpelesLab/vfs"
 )
@@ -17,6 +18,7 @@ func newZip(z *zip.Reader) (vfs.FileSystem, error) {
 }
 
 func (z *noIndexZip) get(fn string) (*zip.File, error) {
+	fn = strings.TrimLeft(fn, "/")
 	for _, f := range z.z.File {
 		if f.Name == fn {
 			return f, nil

@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/KarpelesLab/vfs"
 )
@@ -27,6 +28,7 @@ func newZipMap(z *zip.Reader) (vfs.FileSystem, error) {
 }
 
 func (z *mappedZip) get(fn string) (*zip.File, error) {
+	fn = strings.TrimLeft(fn, "/")
 	if f, ok := z.i[fn]; ok {
 		return f, nil
 	}
