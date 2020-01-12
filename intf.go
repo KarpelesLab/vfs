@@ -36,3 +36,13 @@ type File interface {
 	Readdir(count int) ([]os.FileInfo, error)
 	Stat() (os.FileInfo, error)
 }
+
+type Keyval interface {
+	Get(key string) (KVEntry, error)
+	Put(key string, value KVEntry) error
+	Delete(key string) error
+}
+
+type KVEntry interface {
+	Data() ([]byte, error)
+}

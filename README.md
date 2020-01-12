@@ -14,16 +14,18 @@ This implementation focuses on the following goals:
 * Stay as close as possible to filesystem concepts
 * Be as compatible as possible with Golang's interfaces
 * Be as simple as possible to extend
+* Allow working with limited key/value backends
 
 # Features
 
 * Backends:
   * local filesystem
   * memory
+  * memory keyval
 * Frontends:
   * net/http.FileSystem
 
 ## Planned
 
-* Support for a wide range of backends (local, AWS S3, zip file, etc)
+* Support for a wide range of backends (AWS S3, zip file, etc)
 * Support for frontends (fuse, http, etc)
