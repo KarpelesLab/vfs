@@ -2,6 +2,7 @@ package vfs
 
 import (
 	"os"
+	"path"
 	"path/filepath"
 )
 
@@ -17,15 +18,46 @@ func NewLocal(root string) (FileSystem, error) {
 	return &LocalFS{root}, nil
 }
 
-func (l *LocalFS) Open(name string) (File, error) {
-	p := filepath.Join(l.root, filepath.FromSlash(name))
+func (l *LocalFS) doPath(p string) string {
+	p = path.Clean(p)
+	if l.root == "" {
+		return filepath.FromSlash(p)
+	}
+	return filepath.Join(l.root, filepath.FromSlash(p))
+}
 
-	f, err := os.Open(p)
+func (l *LocalFS) Open(name string) (File, error) {
+	f, err := os.Open(l.doPath(name))
 	if err != nil {
 		return nil, err
 	}
 
 	return (*LocalFile)(f), nil
+}
+
+func (l *LocalFS) Chroot(name string) (FileSystem, error) {
+	p := l.doPath(name)
+
+	p, err := filepath.Abs(p)
+	if err != nil {
+		return nil, err
+	}
+
+	p, err = filepath.EvalSymlinks(p)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if p is an existing directory
+	st, err := os.Stat(p)
+	if err != nil {
+		return nil, err
+	}
+	if !st.IsDir() {
+		return nil, ErrNotDirectory
+	}
+
+	return &LocalFS{p}, nil
 }
 
 func (f *LocalFile) Close() error {
