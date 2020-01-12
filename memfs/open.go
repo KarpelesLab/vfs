@@ -41,11 +41,19 @@ func (m *memOpen) Readdir(n int) ([]os.FileInfo, error) {
 }
 
 func (m *memOpen) Seek(offset int64, whence int) (int64, error) {
-	if offset == 0 && whence == io.SeekStart {
-		m.offset = 0
-		return 0, nil
+	switch whence {
+	case io.SeekStart:
+		m.offset = offset
+		return m.offset, nil
+	case io.SeekCurrent:
+		m.offset += offset
+		return m.offset, nil
+	case io.SeekEnd:
+		m.offset = m.node.Size() + offset
+		return m.offset, nil
+	default:
+		return m.offset, os.ErrInvalid
 	}
-	return m.offset, errors.New("TODO")
 }
 
 func (m *memOpen) Stat() (os.FileInfo, error) {
