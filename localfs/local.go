@@ -1,9 +1,11 @@
-package vfs
+package localfs
 
 import (
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/KarpelesLab/vfs"
 )
 
 type localFS struct {
@@ -12,9 +14,9 @@ type localFS struct {
 
 type localFile os.File
 
-// NewLocal creates a new local filesystem with root as root point. Note that
+// New creates a new local filesystem with root as root point. Note that
 // the root argument format depends on filesystem.
-func NewLocal(p string) (FileSystem, error) {
+func New(p string) (vfs.FileSystem, error) {
 	p, err := filepath.Abs(p)
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func NewLocal(p string) (FileSystem, error) {
 		return nil, err
 	}
 	if !st.IsDir() {
-		return nil, ErrNotDirectory
+		return nil, vfs.ErrNotDirectory
 	}
 
 	return &localFS{p}, nil
@@ -45,7 +47,7 @@ func (l *localFS) doPath(p string) string {
 	return filepath.Join(l.root, filepath.FromSlash(p))
 }
 
-func (l *localFS) Open(name string) (File, error) {
+func (l *localFS) Open(name string) (vfs.File, error) {
 	f, err := os.Open(l.doPath(name))
 	if err != nil {
 		return nil, err
@@ -54,7 +56,7 @@ func (l *localFS) Open(name string) (File, error) {
 	return (*localFile)(f), nil
 }
 
-func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (File, error) {
+func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, error) {
 	f, err := os.OpenFile(l.doPath(name), flag, perm)
 	if err != nil {
 		return nil, err
@@ -79,9 +81,9 @@ func (l *localFS) Remove(name string) error {
 	return os.Remove(l.doPath(name))
 }
 
-func (l *localFS) Chroot(name string) (FileSystem, error) {
+func (l *localFS) Chroot(name string) (vfs.FileSystem, error) {
 	p := l.doPath(name)
-	return NewLocal(p)
+	return New(p)
 }
 
 func (f *localFile) Close() error {
