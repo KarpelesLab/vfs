@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/KarpelesLab/vfs.svg)](https://travis-ci.org/KarpelesLab/vfs)
+[![GoDoc](https://godoc.org/github.com/KarpelesLab/vfs?status.svg)](https://godoc.org/github.com/KarpelesLab/vfs)
+
 # Filesystem Abstraction in Go
 
 Yet another one, created because note of the bazillon existing VFS matched
