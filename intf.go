@@ -31,6 +31,7 @@ type File interface {
 	io.Reader
 	io.ReaderAt
 	io.Writer
+	io.WriterAt
 	io.Seeker
 	Readdir(count int) ([]os.FileInfo, error)
 	Stat() (os.FileInfo, error)
