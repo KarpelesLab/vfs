@@ -71,7 +71,7 @@ func (d *dir) Readdir(n int) ([]os.FileInfo, error) {
 			}
 			res = append(res, st)
 		} else {
-			st := vfs.NewStat(path.Base(sd.path), 0, 0755, now, sd)
+			st := vfs.NewStat(path.Base(sd.path), 0, os.ModeDir|0755, now, sd)
 			res = append(res, st)
 		}
 	}
@@ -100,5 +100,5 @@ func (d *dir) Seek(offset int64, whence int) (int64, error) {
 }
 
 func (d *dir) Stat() (os.FileInfo, error) {
-	return vfs.NewStat(path.Base(d.path), 0, 0755, time.Now(), d), nil
+	return vfs.NewStat(path.Base(d.path), 0, os.ModeDir|0755, time.Now(), d), nil
 }
