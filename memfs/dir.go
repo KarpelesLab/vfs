@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/KarpelesLab/vfs"
@@ -13,6 +14,7 @@ type memDir struct {
 	children map[string]node
 	mode     os.FileMode
 	modTime  time.Time
+	lk       sync.RWMutex
 }
 
 func New() (vfs.FileSystem, error) {
@@ -34,7 +36,10 @@ func (m *memDir) access(name string) (node, error) {
 
 	pos := strings.IndexByte(name, '/')
 	if pos == -1 {
+		m.lk.RLock()
 		v, ok := m.children[name]
+		m.lk.RUnlock()
+
 		if !ok {
 			return nil, os.ErrNotExist
 		}
@@ -44,7 +49,10 @@ func (m *memDir) access(name string) (node, error) {
 	sub := name[:pos]
 	name = name[pos+1:]
 
+	m.lk.RLock()
 	v, ok := m.children[sub]
+	m.lk.RUnlock()
+
 	if !ok {
 		return nil, os.ErrNotExist
 	}
@@ -89,6 +97,9 @@ func (m *memDir) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, er
 		return nil, vfs.ErrNotDirectory
 	}
 
+	dir.lk.Lock()
+	defer dir.lk.Unlock()
+
 	_, hasOld := dir.children[name]
 
 	if flag&os.O_EXCL == os.O_EXCL {
@@ -102,6 +113,7 @@ func (m *memDir) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, er
 	newFile := &memFile{
 		modTime: time.Now(),
 	}
+
 	dir.children[name] = newFile
 
 	return &memOpen{node: newFile, flag: flag, name: name}, nil
@@ -135,6 +147,8 @@ func (m *memDir) Mkdir(name string, perm os.FileMode) error {
 		return vfs.ErrNotDirectory
 	}
 
+	dir.lk.Lock()
+	defer dir.lk.Unlock()
 	_, hasOld := dir.children[name]
 	if hasOld {
 		return os.ErrExist
@@ -164,6 +178,9 @@ func (m *memDir) Remove(name string) error {
 	if !ok {
 		return vfs.ErrNotDirectory
 	}
+
+	dir.lk.Lock()
+	defer dir.lk.Unlock()
 
 	if obj, ok := dir.children[name]; ok {
 		if dir, ok := obj.(*memDir); ok {
