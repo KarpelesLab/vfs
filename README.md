@@ -7,9 +7,16 @@
 Yet another one, created because none [of the bazillon existing Golang VFS](https://awesome-go.com/#files) matched
 the needs we have.
 
-Cloud storage solutions such as AWS S3 are considered "keyvals", similar to
-databases where changing a byte in a value requires rewriting the whole value.
-The goal is to be able to offer middleware interfaces that expose such
+Specifically, many tend to be either oriented toward local filesystems or cloud
+storage providers. Typically, both are very different. Local filesystems allow
+files to be modified, while cloud providers typically require a whole file to
+be re-uploaded for any change. As such, cloud-oriented libraries may support
+local filesystem but have no API for partial writes locally.
+
+Here, cloud storage solutions such as AWS S3 are considered "keyvals", similar
+to databases where changing a byte in a value requires rewriting the whole
+value.
+The goal is to be able to offer converter interfaces that expose such
 backends as proper filesystems supporting partial writes.
 
 # Focus
@@ -32,7 +39,7 @@ This implementation focuses on the following goals:
   * boltkv using [boltdb](https://github.com/boltdb/bolt)
 * Frontends:
   * net/http.FileSystem
-* Middleware:
+* Converters:
   * vdirfs: provides directory indexation/listing for backends which do not have this feature (such as zipfs)
 
 ## Planned
