@@ -4,7 +4,7 @@
 
 # Filesystem Abstraction in Go
 
-Yet another one, created because none of the bazillon existing VFS matched
+Yet another one, created because none [of the bazillon existing Golang VFS](https://awesome-go.com/#files) matched
 the needs we have.
 
 Cloud storage solutions such as AWS S3 are considered "keyvals", similar to
