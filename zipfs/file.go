@@ -23,6 +23,7 @@ func (f *file) Close() error {
 	f.lk.Lock()
 	if f.rd == nil {
 		f.lk.Unlock()
+		return nil
 	}
 
 	err := f.rd.Close()
