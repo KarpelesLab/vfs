@@ -2,14 +2,15 @@ package vfs
 
 import (
 	"os"
+	"path"
 	"path/filepath"
 )
 
-func walk(fs FileSystem, path string, walkFn filepath.WalkFunc, info os.FileInfo, err error) error {
+func walk(fs FileSystem, p string, walkFn filepath.WalkFunc, info os.FileInfo, err error) error {
 	if err != nil {
-		return walkFn(path, info, err)
+		return walkFn(p, info, err)
 	}
-	err = walkFn(path, info, nil)
+	err = walkFn(p, info, nil)
 	if !info.IsDir() {
 		return err
 	}
@@ -17,7 +18,7 @@ func walk(fs FileSystem, path string, walkFn filepath.WalkFunc, info os.FileInfo
 		return nil
 	}
 	// note: ReadDir returns results sorted by name
-	infos, err := ReadDir(fs, path)
+	infos, err := ReadDir(fs, p)
 	if err != nil {
 		return err
 	}
@@ -26,7 +27,7 @@ func walk(fs FileSystem, path string, walkFn filepath.WalkFunc, info os.FileInfo
 		if name == "." || name == ".." {
 			continue
 		}
-		if err := walk(fs, filepath.Join(path, info.Name()), walkFn, info, nil); err != nil {
+		if err := walk(fs, path.Join(p, info.Name()), walkFn, info, nil); err != nil {
 			return err
 		}
 	}
