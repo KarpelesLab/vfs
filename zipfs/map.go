@@ -35,7 +35,10 @@ func newZipMap(z *zip.Reader, addVdir bool) (vfs.FileSystem, error) {
 		}
 
 		for f, _ := range m.i {
-			res.AddPath(f)
+			err := res.AddPath(f)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return res, nil

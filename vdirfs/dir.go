@@ -26,6 +26,7 @@ func (d *dir) getDir(name string, create bool) (*dir, error) {
 			return nil, os.ErrNotExist
 		}
 		sd = &dir{
+			fs:       d.fs,
 			path:     path.Join(d.path, name),
 			children: make(map[string]*dir),
 		}
