@@ -7,10 +7,10 @@ GOPATH:=$(shell $(GO) env GOPATH)
 
 all:
 	$(GOPATH)/bin/goimports -w -l .
-	$(GO) build -v
+	$(GO) build -v ./...
 
 deps:
-	$(GO) get -v -t .
+	$(GO) get -v -t ./...
 
 test:
 	$(GO) test -v ./...
