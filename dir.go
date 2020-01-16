@@ -3,20 +3,23 @@ package vfs
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
 func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
-	if len(path) == 0 || path[0] != '/' {
+	if len(path) == 0 {
 		// path cannot be empty and must be absolute
 		return os.ErrInvalid
 	}
 
 	cur := ""
-	path = path[1:]
 
 	for path != "" {
-		cur = cur + "/"
+		if cur != "" {
+			cur = cur + "/"
+		}
+
 		pos := strings.IndexByte(path, '/')
 		if pos == 0 {
 			path = path[1:]
@@ -43,4 +46,20 @@ func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
 	}
 
 	return nil
+}
+
+func ReadDir(fs FileSystem, path string) ([]os.FileInfo, error) {
+	f, err := fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Slice(res, func(i, j int) bool { return res[i].Name() < res[j].Name() })
+	return res, nil
 }

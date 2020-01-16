@@ -15,7 +15,7 @@ type mappedZip struct {
 	i map[string]*zip.File
 }
 
-func newZipMap(z *zip.Reader, middleware bool) (vfs.FileSystem, error) {
+func newZipMap(z *zip.Reader, addVdir bool) (vfs.FileSystem, error) {
 	m := &mappedZip{
 		z: z,
 		i: make(map[string]*zip.File),
@@ -28,14 +28,17 @@ func newZipMap(z *zip.Reader, middleware bool) (vfs.FileSystem, error) {
 		m.i[f.Name] = f
 	}
 
-	if middleware {
+	if addVdir {
 		res, err := vdirfs.New(m)
 		if err != nil {
 			return nil, err
 		}
 
 		for f, _ := range m.i {
-			res.AddPath(f)
+			err := res.AddPath(f)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		return res, nil

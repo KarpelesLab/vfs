@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strconv"
 	"sync"
 
 	"github.com/KarpelesLab/vfs"
@@ -126,7 +127,7 @@ func (f *file) Seek(offset int64, whence int) (int64, error) {
 }
 
 func (f *file) Stat() (os.FileInfo, error) {
-	st := vfs.NewStat(path.Base(f.zf.Name), int64(f.zf.UncompressedSize64), 0755, f.zf.Modified, f.zf)
+	st := vfs.NewStat(path.Base(f.zf.Name), int64(f.zf.UncompressedSize64), 0755, f.zf.Modified, f)
 
 	return st, nil
 }
@@ -137,4 +138,9 @@ func (f *file) Write(b []byte) (int, error) {
 
 func (f *file) WriteAt(b []byte, pos int64) (int, error) {
 	return 0, os.ErrPermission
+}
+
+// implements vfs.Fingerprintable
+func (f *file) Fingerprint() (string, error) {
+	return strconv.FormatUint(uint64(f.zf.CRC32), 16), nil
 }

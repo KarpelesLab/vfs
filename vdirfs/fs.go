@@ -19,7 +19,7 @@ func New(fs vfs.FileSystem) (*FS, error) {
 	}
 
 	f.root = &dir{
-		path:     "/",
+		path:     "",
 		children: make(map[string]*dir),
 		fs:       f,
 	}
@@ -67,10 +67,16 @@ func (f *FS) OpenFile(path string, flag int, perm os.FileMode) (vfs.File, error)
 }
 
 func (f *FS) Lstat(path string) (os.FileInfo, error) {
+	if d, err := f.root.getDir(path, false); err == nil && d != nil {
+		return d.Stat()
+	}
 	return f.parent.Lstat(path)
 }
 
 func (f *FS) Stat(path string) (os.FileInfo, error) {
+	if d, err := f.root.getDir(path, false); err == nil && d != nil {
+		return d.Stat()
+	}
 	return f.parent.Stat(path)
 }
 
