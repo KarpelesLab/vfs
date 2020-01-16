@@ -8,16 +8,18 @@ import (
 )
 
 func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
-	if len(path) == 0 || path[0] != '/' {
+	if len(path) == 0 {
 		// path cannot be empty and must be absolute
 		return os.ErrInvalid
 	}
 
 	cur := ""
-	path = path[1:]
 
 	for path != "" {
-		cur = cur + "/"
+		if cur != "" {
+			cur = cur + "/"
+		}
+
 		pos := strings.IndexByte(path, '/')
 		if pos == 0 {
 			path = path[1:]
