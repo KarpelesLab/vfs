@@ -1,6 +1,7 @@
 package vdirfs
 
 import (
+	"io/fs"
 	"os"
 	"path"
 	"strings"
@@ -60,8 +61,8 @@ func (d *dir) Close() error {
 	return nil
 }
 
-func (d *dir) Readdir(n int) ([]os.FileInfo, error) {
-	var res []os.FileInfo
+func (d *dir) ReadDir(n int) ([]fs.DirEntry, error) {
+	var res []fs.DirEntry
 	now := time.Now()
 	for n, sd := range d.children {
 		if sd == nil {
@@ -70,10 +71,10 @@ func (d *dir) Readdir(n int) ([]os.FileInfo, error) {
 			if err != nil {
 				return nil, err
 			}
-			res = append(res, st)
+			res = append(res, fs.FileInfoToDirEntry(st))
 		} else {
 			st := vfs.NewStat(path.Base(sd.path), 0, os.ModeDir|0755, now, sd)
-			res = append(res, st)
+			res = append(res, fs.FileInfoToDirEntry(st))
 		}
 	}
 

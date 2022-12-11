@@ -2,6 +2,7 @@ package memfs
 
 import (
 	"io"
+	"io/fs"
 	"os"
 
 	"github.com/KarpelesLab/vfs"
@@ -42,13 +43,13 @@ func (m *memOpen) WriteAt(b []byte, offset int64) (int, error) {
 	return m.node.WriteAt(b, offset)
 }
 
-func (m *memOpen) Readdir(n int) ([]os.FileInfo, error) {
+func (m *memOpen) ReadDir(n int) ([]fs.DirEntry, error) {
 	dir, ok := m.node.(*memDir)
 	if !ok {
 		return nil, vfs.ErrNotDirectory
 	}
 
-	return dir.Readdir()
+	return dir.ReadDir()
 }
 
 func (m *memOpen) Seek(offset int64, whence int) (int64, error) {

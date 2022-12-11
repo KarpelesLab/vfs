@@ -1,6 +1,7 @@
 package memfs
 
 import (
+	"io/fs"
 	"os"
 	"path"
 	"strings"
@@ -222,14 +223,14 @@ func (m *memDir) ModTime() time.Time {
 	return m.modTime
 }
 
-func (m *memDir) Readdir() ([]os.FileInfo, error) {
+func (m *memDir) ReadDir() ([]fs.DirEntry, error) {
 	// we always return all entries, ignoring n
-	var res []os.FileInfo
+	var res []fs.DirEntry
 
 	m.lk.RLock()
 	for name, info := range m.children {
 		info := vfs.NewStat(name, info.Size(), info.Mode(), info.ModTime(), info)
-		res = append(res, info)
+		res = append(res, fs.FileInfoToDirEntry(info))
 	}
 	m.lk.RUnlock()
 

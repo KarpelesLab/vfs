@@ -33,7 +33,7 @@ type File interface {
 	io.Writer
 	io.WriterAt
 	io.Seeker
-	Readdir(count int) ([]fs.FileInfo, error)
+	fs.ReadDirFile
 	Stat() (fs.FileInfo, error)
 }
 

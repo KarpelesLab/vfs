@@ -3,6 +3,7 @@ package zipfs
 import (
 	"archive/zip"
 	"io"
+	"io/fs"
 	"os"
 	"path"
 	"strconv"
@@ -106,7 +107,7 @@ func (f *file) ReadAt(b []byte, pos int64) (int, error) {
 	return n, err
 }
 
-func (f *file) Readdir(n int) ([]os.FileInfo, error) {
+func (f *file) ReadDir(n int) ([]fs.DirEntry, error) {
 	return nil, os.ErrInvalid
 }
 

@@ -48,13 +48,13 @@ func MkdirAll(fsbase FileSystem, path string, perm fs.FileMode) error {
 	return nil
 }
 
-func ReadDir(fsbase FileSystem, path string) ([]fs.FileInfo, error) {
+func ReadDir(fsbase FileSystem, path string) ([]fs.DirEntry, error) {
 	f, err := fsbase.Open(path)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := f.Readdir(-1)
+	res, err := f.ReadDir(-1)
 	f.Close()
 	if err != nil {
 		return nil, err

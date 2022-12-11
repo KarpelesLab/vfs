@@ -1,6 +1,7 @@
 package localfs
 
 import (
+	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
@@ -106,8 +107,8 @@ func (f *localFile) WriteAt(p []byte, offset int64) (int, error) {
 	return (*os.File)(f).WriteAt(p, offset)
 }
 
-func (f *localFile) Readdir(n int) ([]os.FileInfo, error) {
-	return (*os.File)(f).Readdir(n)
+func (f *localFile) ReadDir(n int) ([]fs.DirEntry, error) {
+	return (*os.File)(f).ReadDir(n)
 }
 
 func (f *localFile) Seek(offset int64, whence int) (int64, error) {

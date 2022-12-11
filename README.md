@@ -37,8 +37,6 @@ This implementation focuses on the following goals:
 * Keyval Backends:
   * memkv
   * boltkv using [boltdb](https://github.com/boltdb/bolt)
-* Frontends:
-  * net/http.FileSystem
 * Converters:
   * vdirfs: provides directory indexation/listing for backends which do not have this feature (such as zipfs)
 
