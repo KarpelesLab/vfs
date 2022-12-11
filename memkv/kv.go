@@ -59,7 +59,7 @@ func (e *memKv) Delete(key string) error {
 	return nil
 }
 
-func (e memKv) List(prefix string, callback func(key string, value vfs.KVEntry) (bool, error)) error {
+func (e *memKv) List(prefix string, callback func(key string, value vfs.KVEntry) (bool, error)) error {
 	var list []*entry
 
 	// make a copy so callback can use functions that use a lock
