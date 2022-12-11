@@ -1,12 +1,12 @@
 package vfs
 
 import (
-	"os"
+	"io/fs"
 	"path"
 	"path/filepath"
 )
 
-func walk(fs FileSystem, p string, walkFn filepath.WalkFunc, info os.FileInfo, err error) error {
+func walk(fs FileSystem, p string, walkFn filepath.WalkFunc, info fs.FileInfo, err error) error {
 	if err != nil {
 		return walkFn(p, info, err)
 	}

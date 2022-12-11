@@ -2,15 +2,15 @@ package vfs
 
 import (
 	"fmt"
-	"os"
+	"io/fs"
 	"sort"
 	"strings"
 )
 
-func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
+func MkdirAll(fsbase FileSystem, path string, perm fs.FileMode) error {
 	if len(path) == 0 {
 		// path cannot be empty and must be absolute
-		return os.ErrInvalid
+		return fs.ErrInvalid
 	}
 
 	cur := ""
@@ -33,13 +33,13 @@ func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
 			path = ""
 		}
 
-		st, err := fs.Lstat(cur)
+		st, err := fsbase.Lstat(cur)
 		if err == nil {
 			if !st.IsDir() {
 				return fmt.Errorf("%s exists and is %w", cur, ErrNotDirectory)
 			}
 		} else {
-			if err = fs.Mkdir(cur, perm); err != nil {
+			if err = fsbase.Mkdir(cur, perm); err != nil {
 				return fmt.Errorf("failed to mkdir %s: %w", cur, err)
 			}
 		}
@@ -48,8 +48,8 @@ func MkdirAll(fs FileSystem, path string, perm os.FileMode) error {
 	return nil
 }
 
-func ReadDir(fs FileSystem, path string) ([]os.FileInfo, error) {
-	f, err := fs.Open(path)
+func ReadDir(fsbase FileSystem, path string) ([]fs.FileInfo, error) {
+	f, err := fsbase.Open(path)
 	if err != nil {
 		return nil, err
 	}

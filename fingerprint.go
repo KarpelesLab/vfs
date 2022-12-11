@@ -2,7 +2,7 @@ package vfs
 
 import (
 	"bytes"
-	"os"
+	"io/fs"
 	"strconv"
 )
 
@@ -17,7 +17,7 @@ type Fingerprintable interface {
 
 // Fingerprint will return a fingerprint for a given file, silently falling
 // back on using size+timestamp in case of backend failure.
-func Fingerprint(f os.FileInfo) string {
+func Fingerprint(f fs.FileInfo) string {
 	if fp, ok := f.Sys().(Fingerprintable); ok {
 		if res, err := fp.Fingerprint(); err == nil && res != "" {
 			return res

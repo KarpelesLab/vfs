@@ -1,19 +1,19 @@
 package vfs
 
 import (
-	"os"
+	"io/fs"
 	"time"
 )
 
 type vStat struct {
 	name    string
 	size    int64
-	mode    os.FileMode
+	mode    fs.FileMode
 	modTime time.Time
 	sys     interface{}
 }
 
-func NewStat(name string, size int64, mode os.FileMode, modTime time.Time, sys interface{}) os.FileInfo {
+func NewStat(name string, size int64, mode fs.FileMode, modTime time.Time, sys interface{}) fs.FileInfo {
 	return &vStat{
 		name:    name,
 		size:    size,
@@ -35,7 +35,7 @@ func (v *vStat) IsDir() bool {
 	return v.mode.IsDir()
 }
 
-func (v *vStat) Mode() os.FileMode {
+func (v *vStat) Mode() fs.FileMode {
 	return v.mode
 }
 
