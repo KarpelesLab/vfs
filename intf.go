@@ -6,14 +6,12 @@ import (
 )
 
 type FileSystem interface {
-	Open(name string) (File, error)
-	OpenFile(path string, flag int, perm fs.FileMode) (File, error)
+	fs.FS
+	fs.StatFS
+	OpenFile(path string, flag int, perm fs.FileMode) (fs.File, error)
 	// Lstat returns the fs.FileInfo for the given path, without
 	// following symlinks.
 	Lstat(path string) (fs.FileInfo, error)
-	// Stat returns the fs.FileInfo for the given path, following
-	// symlinks.
-	Stat(path string) (fs.FileInfo, error)
 	// Mkdir creates a directory at the given path. If the directory
 	// already exists or its parent directory does not exist or
 	// the permissions don't allow it, an error will be returned. See

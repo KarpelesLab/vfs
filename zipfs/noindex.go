@@ -2,6 +2,7 @@ package zipfs
 
 import (
 	"archive/zip"
+	"io/fs"
 	"os"
 	"path"
 	"strings"
@@ -28,7 +29,7 @@ func (z *noIndexZip) get(fn string) (*zip.File, error) {
 	return nil, os.ErrNotExist
 }
 
-func (z *noIndexZip) Open(name string) (vfs.File, error) {
+func (z *noIndexZip) Open(name string) (fs.File, error) {
 	f, err := z.get(name)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func (z *noIndexZip) Open(name string) (vfs.File, error) {
 	return &file{zf: f}, nil
 }
 
-func (z *noIndexZip) OpenFile(path string, flag int, perm os.FileMode) (vfs.File, error) {
+func (z *noIndexZip) OpenFile(path string, flag int, perm os.FileMode) (fs.File, error) {
 	if flag != os.O_RDONLY {
 		return nil, os.ErrPermission
 	}

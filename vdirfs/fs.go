@@ -1,6 +1,7 @@
 package vdirfs
 
 import (
+	"io/fs"
 	"os"
 	"path"
 	"strings"
@@ -37,7 +38,7 @@ func (f *FS) AddPath(name string) error {
 	return nil
 }
 
-func (f *FS) Open(name string) (vfs.File, error) {
+func (f *FS) Open(name string) (fs.File, error) {
 	d, err := f.root.getDir(name, false)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (f *FS) Open(name string) (vfs.File, error) {
 	return f.parent.Open(name)
 }
 
-func (f *FS) OpenFile(path string, flag int, perm os.FileMode) (vfs.File, error) {
+func (f *FS) OpenFile(path string, flag int, perm os.FileMode) (fs.File, error) {
 	if flag != os.O_RDONLY {
 		return f.parent.OpenFile(path, flag, perm)
 	}

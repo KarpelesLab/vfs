@@ -70,7 +70,7 @@ func (m *memDir) access(name string) (node, error) {
 	return vD.access(name)
 }
 
-func (m *memDir) Open(name string) (vfs.File, error) {
+func (m *memDir) Open(name string) (fs.File, error) {
 	a, err := m.access(name)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (m *memDir) Open(name string) (vfs.File, error) {
 	return &memOpen{node: a, flag: os.O_RDONLY, name: path.Base(name)}, nil
 }
 
-func (m *memDir) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, error) {
+func (m *memDir) OpenFile(name string, flag int, perm os.FileMode) (fs.File, error) {
 	if flag&os.O_CREATE != os.O_CREATE {
 		// request for an existing file, easy.
 		a, err := m.access(name)

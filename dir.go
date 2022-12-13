@@ -3,7 +3,6 @@ package vfs
 import (
 	"fmt"
 	"io/fs"
-	"sort"
 	"strings"
 )
 
@@ -49,17 +48,5 @@ func MkdirAll(fsbase FileSystem, path string, perm fs.FileMode) error {
 }
 
 func ReadDir(fsbase FileSystem, path string) ([]fs.DirEntry, error) {
-	f, err := fsbase.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := f.ReadDir(-1)
-	f.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	sort.Slice(res, func(i, j int) bool { return res[i].Name() < res[j].Name() })
-	return res, nil
+	return fs.ReadDir(fsbase, path)
 }

@@ -48,7 +48,7 @@ func (l *localFS) doPath(p string) string {
 	return filepath.Join(l.root, filepath.FromSlash(p))
 }
 
-func (l *localFS) Open(name string) (vfs.File, error) {
+func (l *localFS) Open(name string) (fs.File, error) {
 	f, err := os.Open(l.doPath(name))
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (l *localFS) Open(name string) (vfs.File, error) {
 	return (*localFile)(f), nil
 }
 
-func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, error) {
+func (l *localFS) OpenFile(name string, flag int, perm os.FileMode) (fs.File, error) {
 	f, err := os.OpenFile(l.doPath(name), flag, perm)
 	if err != nil {
 		return nil, err

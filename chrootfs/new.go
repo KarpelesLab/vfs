@@ -1,6 +1,7 @@
 package chrootfs
 
 import (
+	"io/fs"
 	"os"
 	"path"
 
@@ -40,7 +41,7 @@ func (c *chrootFs) doPath(name string) (string, error) {
 	return name, nil
 }
 
-func (c *chrootFs) Open(name string) (vfs.File, error) {
+func (c *chrootFs) Open(name string) (fs.File, error) {
 	name, err := c.doPath(name)
 	if err != nil {
 		return nil, err
@@ -49,7 +50,7 @@ func (c *chrootFs) Open(name string) (vfs.File, error) {
 	return c.parent.Open(name)
 }
 
-func (c *chrootFs) OpenFile(name string, flag int, perm os.FileMode) (vfs.File, error) {
+func (c *chrootFs) OpenFile(name string, flag int, perm os.FileMode) (fs.File, error) {
 	name, err := c.doPath(name)
 	if err != nil {
 		return nil, err
