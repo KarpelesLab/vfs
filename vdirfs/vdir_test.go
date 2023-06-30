@@ -1,7 +1,9 @@
 package vdirfs_test
 
 import (
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"testing"
@@ -18,10 +20,14 @@ func putFile(fs vfs.FileSystem, name, data string) error {
 	}
 
 	fp, err := fs.OpenFile(name, os.O_WRONLY|os.O_CREATE, 0755)
-	return err
-	_, err = fp.Write([]byte(data))
-	fp.Close()
-	return err
+	if wfp, ok := fp.(io.Writer); ok {
+		_, err = wfp.Write([]byte(data))
+		fp.Close()
+		return err
+	} else {
+		fp.Close()
+		return errors.New("file did not support writing")
+	}
 }
 
 func TestVdir(t *testing.T) {
